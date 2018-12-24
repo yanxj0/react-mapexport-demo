@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html style="margin: 0;padding: 0;">
+<head>
+    <meta charset="UTF-8">
+        <!-- Required to convert named colors to RGB -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/1.4/rgbcolor.min.js"></script>
+    <!-- Optional if you want blur -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stackblur-canvas/1.4.1/stackblur.min.js"></script>
+    <!-- Main canvg code -->
+    <script src="https://cdn.jsdelivr.net/npm/canvg/dist/browser/canvg.min.js"></script>
+</head>
+<body style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+  <button style="width: 120px" onclick="svgToCanvas()">Test</button>
+  <span>结果：</span>
+  <img id="resimg" style="width: 637px;height: 566px;">
+  <span>canvas：</span>
+  <canvas id="myCanvas" width="637" height="566" style="width: 637px;height: 566px;"></canvas>
+  <span>svg:</span>
+  <svg overflow="hidden" width="637" height="566" id="map_gc" style="touch-action: none; will-change: transform; overflow: visible; position: absolute; transform: translate(0px, 0px);"><g id="measure_area_layer" style="display: block;"><path fill="rgb(96, 160, 228)" fill-opacity="0.25" stroke="rgb(0, 102, 249)" stroke-opacity="1" stroke-width="2" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" path="M 319,307 390,307 452,348 440,441 399,455 243,376 319,307 Z" d="M 319 307 390 307 452 348 440 441 399 455 243 376 319 307Z" stroke-dasharray="none" dojoGfxStrokeStyle="solid" fill-rule="evenodd"></path><g></g><text fill="rgb(105, 105, 105)" fill-opacity="1" stroke="none" stroke-opacity="0" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" x="364" y="374" text-anchor="middle" text-decoration="undefined" rotate="0" kerning="auto" text-rendering="auto" font-style="italic" font-variant="normal" font-weight="bold" font-size="13.333333333333332" font-family="Courier" dominant-baseline="alphabetic" filter="url(#halo_map_measure_area_255_255_255_1_2)" transform="matrix(1.00000000,0.00000000,0.00000000,1.00000000,30.00000000,-10.00000000)" fill-rule="evenodd">1389.67平方千米</text><path fill="rgb(249, 3, 2)" fill-opacity="1" stroke="none" stroke-opacity="0" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="4" path="M13.618,2.397 C10.513,-0.708 5.482,-0.713 2.383,2.386 C-0.718,5.488 -0.715,10.517 2.392,13.622 C5.497,16.727 10.529,16.731 13.627,13.632 C16.727,10.533 16.724,5.502 13.618,2.397 L13.618,2.397 Z M9.615,11.351 L7.927,9.663 L6.239,11.351 C5.55,12.04 5.032,12.64 4.21,11.819 C3.39,10.998 3.987,10.48 4.679,9.79 L6.367,8.103 L4.679,6.415 C3.989,5.726 3.39,5.208 4.21,4.386 C5.032,3.566 5.55,4.165 6.239,4.855 L7.927,6.541 L9.615,4.855 C10.305,4.166 10.82,3.565 11.642,4.386 C12.464,5.208 11.865,5.726 11.175,6.415 L9.487,8.102 L11.175,9.789 C11.864,10.48 12.464,10.998 11.642,11.819 C10.822,12.64 10.305,12.04 9.615,11.351 L9.615,11.351 Z" d="M 13.618 2.397C 10.513-0.708 5.482-0.713 2.383 2.386C-0.718 5.488-0.715 10.517 2.392 13.622C 5.497 16.727 10.529 16.731 13.627 13.632C 16.727 10.533 16.724 5.502 13.618 2.397L 13.618 2.397ZM 9.615 11.351L 7.927 9.663L 6.239 11.351C 5.55 12.04 5.032 12.64 4.21 11.819C 3.39 10.998 3.987 10.48 4.679 9.79L 6.367 8.103L 4.679 6.415C 3.989 5.726 3.39 5.208 4.21 4.386C 5.032 3.566 5.55 4.165 6.239 4.855L 7.927 6.541L 9.615 4.855C 10.305 4.166 10.82 3.565 11.642 4.386C 12.464 5.208 11.865 5.726 11.175 6.415L 9.487 8.102L 11.175 9.789C 11.864 10.48 12.464 10.998 11.642 11.819C 10.822 12.64 10.305 12.04 9.615 11.351L 9.615 11.351Z" transform="matrix(0.91716824,0.00000000,0.00000000,0.91716824,371.65852680,366.65439954)" fill-rule="evenodd"></path></g><defs><filter filterUnits="userSpaceOnUse" x="0" y="0" width="637" height="566" id="halo_map_measure_area_255_255_255_1_2"><feMorphology operator="dilate" radius="2" result="dilated"></feMorphology><feFlood flood-color="rgba(255, 255, 255, 1)"></feFlood><feComposite in2="dilated" operator="in" result="composite"></feComposite><feMerge><feMergeNode in="composite"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></defs></svg>
+	<script>
+    function svgToCanvas() {
+        var svgString = new XMLSerializer().serializeToString(document.querySelector('svg'));
+        var img = new Image();
+        var svg = new Blob([svgString], { type: "image/svg+xml;charset=utf-8," });
+        var DOMURL = self.URL || self.webkitURL || self;
+        var urlBlob = DOMURL.createObjectURL(svg);
+        var urlData = 'data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(svgString)));
+        var canvas = document.getElementById("myCanvas");
+
+        //插件（需注释37，38行）
+        // canvg(canvas, svgString);
+
+        img.crossOrigin = 'Anonymous';
+        img.src = urlBlob;
+        img.onload = function () {
+            //非插件（跨域出错）（需注释第30行）
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, 637, 556);
+
+            var img1 = document.getElementById('resimg');
+            img1.src = canvas.toDataURL();       
+        }     
+    };
+</script>
+</body>
+</html>

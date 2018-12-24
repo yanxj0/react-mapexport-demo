@@ -300,7 +300,7 @@ export default function() {
               var imgSrc =
                 (this.option.proxyUrl === ""
                   ? ""
-                  : this.option.proxyUrl + "?") + tileImgs[id].currentSrc;
+                  : this.option.proxyUrl + "?") + tileImgs[id].src;
               // console.log(imgSrc);
               Utils.getBase64Img(
                 imgSrc,
