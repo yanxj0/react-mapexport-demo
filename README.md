@@ -12,33 +12,29 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 地图导出
+支持天地图、arcgis服务以及GraphicLayer的图片导出；   
+原本打算用antd和dva写的，愣是没写下去😂；直接上jquery了。。。
 
-### `npm run build`
+主要方法在`utils/printUtil.js、utils/calcUtil.js`
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 过程
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+wmts服务添加到map后arcgisapi会根据当前视图计算用于显示瓦片，并通过二维变换让所有图片拼接显示。这些变换的参数在图层对象中都能获取到，根据这些变换参数可以将瓦片手动拼成一张图片。功能主要解决的问题还是资源跨域问题，瓦片要转换为base64编码的图片，然后拼合成一张图片，最后在使用前端截图插件dom-to-image或html2canvas进行图片生成。
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1、初始化map对象，div显示层级为负，设置map的中心点和比例尺  
+2、添加底图和要素图形   
 
-### `npm run eject`
+- 有wmts
+为保证wmts服务的瓦片获取正确无误，必须全部添加到map上，监听每个服务的update-end事件，不添加arcgis服务
+- 无wmts
+arcgis服务只需添加一个即可，我们只是需要map初始化完成后的extent，监听服务的load事件
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+3、待上述事件全部抛出，开始打印准备，创建打印根节点元素(层级设为负)   
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- wmts服务瓦片获取并转为base64，拼合做位置变换，完成后返回服务图片容器的元素节点
+- arcgis服务export图片，dpi、bbox、height、width、sr、visibleLayers，每个服务都要进行请求，都完成后返回服务图片容器的元素节点
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+4、将3中返回的元素加入打印根结点元素，克隆map中要素图层的svg元素，加入打印根节点元素  
+5、使用截图插件出图，完成事件抛出
